@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel='stylesheet' href="../styles.css">
+<style>
+  input{
+    text-align: center;
+  }
+  .input-container{
+    display: inline-flex;
+    align-items: center;
+  }
+  .text-field{
+    flex-grow: 1;
+    margin-right: 8px;
+  }
+  .uneditable-text{
+    color: gray;
+    margin-left: -20px;
+  }
+</style>
+</head>
+<body>
+<div style='text-align: center'>
+Temperature converter:
+F = (9/5)C + 32
+</div>
+<div style='text-align: center; margin-top: 10px'>
+  <span class='input-container'>
+    <input type='text' class='text-container' id='c'>
+    <span class='uneditable-text'> °C </span>
+  </span>
+   <span style='white-space: pre-wrap'> = </span>
+  <span class='input-container'>
+    <input type='text' class='text-container' id='f'>
+    <span class='uneditable-text'>°F</span>
+  </span>
+</div>
+<script>
+c = document.getElementById('c')
+f = document.getElementById('f')
+
+function limitPrecision(number, maxDigits) {
+    const multiplier = Math.pow(10, maxDigits);
+    return Math.floor(number * multiplier) / multiplier;
+} //taken from chatgpt
+
+function handleNaN(value){
+    return isNaN(value) ? '' : value;
+}
+
+
+c.addEventListener('input', function(event){
+   let float = (9/5)* parseFloat(event.target.value) + 32
+   f.value = handleNaN(limitPrecision(float, 5)) 
+})
+
+f.addEventListener('input', function(event){
+    let float = (parseFloat(event.target.value) - 32)*(5/9)
+    c.value = handleNaN(limitPrecision(float, 5))
+})
+</script>
+</html>
+
