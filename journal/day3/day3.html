@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  canvas{
+    border: 1px solid black;
+    width: 300px;
+    height: 300px;
+  }
+</style>
+</head>
+<body>
+
+<p> The force on a particle is proportional to the inverse of the square of the distance. That isn't what this page is about though. This page is about a bouncing ball. </p> 
+
+
+<canvas width='300px' height='300px'></canvas>
+<p>The behavior on this is weird. The velocity is reversed whenever it hits the bottom, so it should model a perfectly elastic collision, and the ball should return to the same height. However, the height ever so slightly drifts. </p>
+<script>
+  canvas = document.querySelector('canvas')
+  ctx = canvas.getContext('2d')
+  ctx.imageSmoothingEnabled = false;
+
+  const scaleFactor = window.devicePixelRatio;
+  canvas.width *= scaleFactor;
+  canvas.height *= scaleFactor;
+  ctx.scale(scaleFactor, scaleFactor);
+  ctx.strokeRect(0,0, 10, 10)
+ 
+  function clear(){
+    ctx.clearRect(0, 0, 300, 300)
+  }
+
+  function render(){
+    clear()
+    ctx.strokeRect(0, position, 10, 10)
+  }
+
+  position = 50
+  speed = 0
+  acceleration = 0.1
+
+  let minPosition = position
+
+  let lastTimeStamp;
+  function run(timeStamp){
+    const elapsed = lastTimeStamp? timeStamp - lastTimeStamp : 0
+    lastTimeStamp = timeStamp
+    
+    position += speed*elapsed
+    if (position > 290){
+      speed = -Math.abs(speed)
+    }else{ 
+      speed += acceleration
+    }
+    minPosition = Math.min(position, minPosition)
+    console.log(minPosition)
+    render()
+  }
+ 
+ // timer = setInterval(run, 10)
+
+  function animate(timeStamp){
+    run(timeStamp)
+    requestAnimationFrame(animate)
+  }
+
+  animate()
+
+</script>
+</body>
+</html>

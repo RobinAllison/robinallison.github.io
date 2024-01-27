@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel='stylesheet' href='../../styles.css'>
+<style>
+  .drag{ 
+   position: absolute;
+  }
+  .moving{
+    position: absolute;
+  }
+  #text{
+    top: 50px;
+    left: 50px;
+  }
+</style>
+</head>
+<body>
+<p> You can drag the text below </p>
+
+<p class='drag' id='text'>Drag Me!</p>
+<input type='text' value='initial text' class='drag'>
+
+<p class='moving'> I'm moving! </p>
+
+
+<script>
+
+
+function correction(event){
+  if (event.target.tagName == 'P'){
+    return -16
+  } else {
+    return 0
+  }
+}
+
+// code for moving html elements adapted from chatgpt
+document.querySelectorAll('.drag').forEach(x=>x.addEventListener('mousedown', function(event){
+  //event.preventDefault() // so we don't select text
+  let offsetX = event.clientX - x.getBoundingClientRect().x
+  let offsetY = event.clientY - x.getBoundingClientRect().y
+  let c = correction(event)
+  function handleDrag(event){
+    const newX = event.clientX - offsetX
+    const newY = event.clientY - offsetY + c // + correction(event)  //the last term acccounts for the line height
+  
+    x.style.left = `${newX}px`
+    x.style.top = `${newY}px`
+
+    updateVelocity();
+  }
+  document.addEventListener('mousemove', handleDrag)
+  document.addEventListener('mouseup', function(event){
+    document.removeEventListener('mousemove', handleDrag)
+  })
+}));
+
+let inputEl = document.querySelector('input')
+let textEl = document.querySelector('#text')
+
+function updateVelocity(){
+  velocity.x = inputEl.getBoundingClientRect().x - textEl.getBoundingClientRect().x
+  velocity.y = inputEl.getBoundingClientRect().y - textEl.getBoundingClientRect().y
+}
+
+let velocity = {x: 1, y: 0}
+let position = {x: 0, y: 0}
+
+function moveElement(){
+  position.x += velocity.x/50
+  position.y += velocity.y/50
+  document.querySelector('.moving').style.left = position.x +'px'
+  document.querySelector('.moving').style.top = position.y +'px'
+}
+const animation = setInterval(moveElement, 10) 
+
+</script>
+</body>
+</html>
